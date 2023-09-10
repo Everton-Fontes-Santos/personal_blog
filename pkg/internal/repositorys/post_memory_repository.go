@@ -7,7 +7,7 @@ import (
 )
 
 type PostMemoryDB struct {
-	Posts []*entitys.Post
+	Posts []entitys.Post
 }
 
 type PostMemoryRepository struct {
@@ -17,18 +17,18 @@ type PostMemoryRepository struct {
 func NewPostMemoryRepository() *PostMemoryRepository {
 	return &PostMemoryRepository{
 		db: PostMemoryDB{
-			Posts: make([]*entitys.Post, 0),
+			Posts: make([]entitys.Post, 0),
 		},
 	}
 }
 
-func (p *PostMemoryRepository) Get(id string) (*entitys.Post, error) {
+func (p *PostMemoryRepository) Get(id string) (entitys.Post, error) {
 	for _, post := range p.db.Posts {
 		if post.ID == id {
 			return post, nil
 		}
 	}
-	return &entitys.Post{}, errors.New("don't have this post on db")
+	return entitys.Post{}, errors.New("don't have this post on db")
 }
 
 func (p *PostMemoryRepository) Delete(id string) error {
@@ -41,14 +41,14 @@ func (p *PostMemoryRepository) Delete(id string) error {
 	return errors.New("don't have this post to delete")
 }
 
-func (p *PostMemoryRepository) List() ([]*entitys.Post, error) {
+func (p *PostMemoryRepository) List() ([]entitys.Post, error) {
 	if len(p.db.Posts) == 0 {
-		return []*entitys.Post{}, errors.New("don't have one post to return")
+		return []entitys.Post{}, errors.New("don't have one post to return")
 	}
 	return p.db.Posts, nil
 }
 
-func (p *PostMemoryRepository) Save(post *entitys.Post) error {
+func (p *PostMemoryRepository) Save(post entitys.Post) error {
 	dbPost, err := p.Get(post.ID)
 	if err != nil {
 		p.db.Posts = append(p.db.Posts, post)

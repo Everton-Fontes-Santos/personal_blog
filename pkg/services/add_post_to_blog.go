@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/Everton-Fontes-Santos/personal_blog/pkg/internal/domain"
 	"github.com/Everton-Fontes-Santos/personal_blog/pkg/internal/entitys"
 )
@@ -11,11 +13,36 @@ type AddPostToBlog struct {
 	PostRepository domain.PostRepository
 }
 
-func (s *AddPostToBlog) Execute(blog *entitys.Blog, post entitys.Post) (any, error) {
-	err := s.PostRepository.Save(post)
+func NewAddToBlogService(repo domain.PostRepository) ServiceInterface {
+	return &AddPostToBlog{
+		PostRepository: repo,
+	}
+}
+
+func (s *AddPostToBlog) Execute(opts ...any) (any, error) {
+	var blog *entitys.Blog
+	var post *entitys.Post
+
+	for _, opt := range opts {
+		switch v := opt.(type) {
+		default:
+			return nil, errors.New("the types must be Blog or Post")
+		case *entitys.Post:
+			post = v
+		case *entitys.Blog:
+			blog = v
+
+		case entitys.Post:
+			post = &v
+		case entitys.Blog:
+			blog = &v
+		}
+	}
+
+	err := s.PostRepository.Save(*post)
 	if err != nil {
 		return nil, err
 	}
-	blog.AddPost(&post)
+	blog.AddPost(post)
 	return nil, nil
 }

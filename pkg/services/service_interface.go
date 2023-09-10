@@ -1,5 +1,5 @@
 package services
 
 type ServiceInterface interface {
-	Execute(params ...any) (any, error)
+	Execute(opts ...any) (any, error)
 }
