@@ -13,7 +13,7 @@ type AddPostToBlog struct {
 	PostRepository domain.PostRepository
 }
 
-func NewAddToBlogService(repo domain.PostRepository) ServiceInterface {
+func NewAddToBlogService(repo domain.PostRepository) ServiceInterface[any] {
 	return &AddPostToBlog{
 		PostRepository: repo,
 	}

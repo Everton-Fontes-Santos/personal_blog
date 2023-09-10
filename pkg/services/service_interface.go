@@ -1,5 +1,5 @@
 package services
 
-type ServiceInterface interface {
-	Execute(opts ...any) (any, error)
+type ServiceInterface[T any] interface {
+	Execute(opts ...any) (T, error)
 }

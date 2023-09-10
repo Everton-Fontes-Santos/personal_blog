@@ -9,15 +9,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddPostTOBlog(t *testing.T) {
+func TestGetBlogPost(t *testing.T) {
 	repo := repositorys.NewPostMemoryRepository()
 	post, _ := entitys.NewPost()
 	blog := entitys.NewBlog("Efs Blog")
-	service := services.NewAddToBlogService(repo)
-	resp, err := service.Execute(post, blog)
+	add := services.NewAddToBlogService(repo)
+	service := services.NewGetByIDService(repo)
+	add.Execute(post, blog)
+
+	resp, err := service.Execute(blog, post.ID)
 	assert.NoError(t, err)
-	assert.Equal(t, resp, nil)
-	posts, _ := repo.List()
-	assert.Equal(t, len(posts), 1)
+	assert.Equal(t, resp.ID, post.ID)
 
 }

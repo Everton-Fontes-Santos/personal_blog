@@ -13,7 +13,13 @@ type GetPostByIDService struct {
 	PostRepository domain.PostRepository
 }
 
-func (s *GetPostByIDService) Execute(opts ...any) (any, error) {
+func NewGetByIDService(repo domain.PostRepository) ServiceInterface[entitys.Post] {
+	return &GetPostByIDService{
+		PostRepository: repo,
+	}
+}
+
+func (s *GetPostByIDService) Execute(opts ...any) (entitys.Post, error) {
 
 	var blog entitys.Blog
 	var id string
@@ -21,7 +27,7 @@ func (s *GetPostByIDService) Execute(opts ...any) (any, error) {
 	for _, opt := range opts {
 		switch v := opt.(type) {
 		default:
-			return nil, errors.New("types must be Blog or Post")
+			return entitys.Post{}, errors.New("types must be Blog or Post")
 		case string:
 			id = v
 		case entitys.Blog:
@@ -33,16 +39,16 @@ func (s *GetPostByIDService) Execute(opts ...any) (any, error) {
 
 	posts, err := blog.GetAllPosts()
 	if err != nil {
-		return nil, err
+		return entitys.Post{}, err
 	}
 	for _, post := range posts {
 		if post.ID == id {
-			return post, nil
+			return *post, nil
 		}
 	}
 	post, err := s.PostRepository.Get(id)
 	if err != nil {
-		return nil, err
+		return entitys.Post{}, err
 	}
 	return post, nil
 }
