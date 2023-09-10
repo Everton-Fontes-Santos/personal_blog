@@ -7,7 +7,7 @@ import (
 )
 
 type Category struct {
-	ID   uuid.UUID
+	ID   string
 	NAME string
 }
 
@@ -19,7 +19,7 @@ func NewCategory(name string) (*Category, error) {
 	}
 
 	return &Category{
-		ID:   id,
+		ID:   id.String(),
 		NAME: name,
 	}, nil
 }

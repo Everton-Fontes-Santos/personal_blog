@@ -26,7 +26,7 @@ func NewUser(
 
 	return &User{
 		Person: &Person{
-			ID:       id,
+			ID:       id.String(),
 			NAME:     name,
 			LASTNAME: lastName,
 			AGE:      29,

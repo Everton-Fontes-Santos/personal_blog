@@ -8,14 +8,14 @@ import (
 )
 
 type PostOps struct {
-	ID         uuid.UUID   `json:"id"`
+	ID         string      `json:"id"`
 	TITLE      string      `json:"title"`
 	SLUG       string      `json:"slug"`
 	SMALL_DESC string      `json:"small_desc"`
 	TEXT       string      `json:"text"`
 	CREATED_AT time.Time   `json:"created_at"`
 	UPDATED_AT time.Time   `json:"updated_at"`
-	OWNER_ID   uuid.UUID   `json:"owner_id"`
+	AUTHOR     string      `json:"author"`
 	CATEGORYS  []*Category `json:"categorys"`
 }
 
@@ -34,7 +34,7 @@ func defaultPostOpts() (PostOps, error) {
 		return PostOps{}, errors.New("errors on creating a uuid for post")
 	}
 	return PostOps{
-		ID:         id,
+		ID:         id.String(),
 		CREATED_AT: time.Now(),
 		CATEGORYS:  make([]*Category, 0),
 	}, nil
@@ -46,9 +46,9 @@ func WithCategory(cat *Category) PostOptsFunc {
 	}
 }
 
-func WithOwner(id uuid.UUID) PostOptsFunc {
+func WithOwner(id string) PostOptsFunc {
 	return func(opts *PostOps) {
-		opts.OWNER_ID = id
+		opts.AUTHOR = id
 	}
 }
 
@@ -91,22 +91,22 @@ func NewPost(opts ...PostOptsFunc) (*Post, error) {
 	}, nil
 }
 
-func (p *Post) setText(text string) {
+func (p *Post) SetText(text string) {
 	p.TEXT = text
 	p.UPDATED_AT = time.Now()
 }
 
-func (p *Post) setSmallDesc(text string) {
+func (p *Post) SetSmallDesc(text string) {
 	p.SMALL_DESC = text
 	p.UPDATED_AT = time.Now()
 }
 
-func (p *Post) setSlug(text string) {
+func (p *Post) SetSlug(text string) {
 	p.SLUG = text
 	p.UPDATED_AT = time.Now()
 }
 
-func (p *Post) setTitle(text string) {
+func (p *Post) SetTitle(text string) {
 	p.TITLE = text
 	p.UPDATED_AT = time.Now()
 }
