@@ -2,6 +2,10 @@ package entitys
 
 import "github.com/google/uuid"
 
+// User is a entity thats represents a User for all Domains
+// this entitys will get a id for unique comparations and
+// a name and last name and age of the persor who he are
+// and have a email as password
 type User struct {
 	*Person
 	EMAIL    string `json:"email"`

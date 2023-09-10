@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// Blog is a entity thats represents a Blog for all Domains
+// this entitys will get admins who its User and posts
+// and thats a Post
 type Blog struct {
 	NAME   string
 	posts  []*Post
@@ -36,14 +39,14 @@ func (b *Blog) GetAdmins() ([]*User, error) {
 	return b.admins, nil
 }
 
-func (b *Blog) GetAllPosts() ([]*Post, error) {
+func (b Blog) GetAllPosts() ([]*Post, error) {
 	if len(b.posts) <= 0 {
 		return []*Post{}, errors.New("don't have any post to get")
 	}
 	return b.posts, nil
 }
 
-func (b *Blog) GetPostByDate(date time.Time) ([]*Post, error) {
+func (b Blog) GetPostByDate(date time.Time) ([]*Post, error) {
 	posts, err := b.GetAllPosts()
 	if err != nil {
 		return posts, err
