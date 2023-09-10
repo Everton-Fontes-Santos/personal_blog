@@ -2,6 +2,7 @@ package entitys
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,6 +50,17 @@ func WithCategory(cat *Category) PostOptsFunc {
 func WithOwner(id string) PostOptsFunc {
 	return func(opts *PostOps) {
 		opts.AUTHOR = id
+	}
+}
+
+func WithCreatedAt(dateString string) PostOptsFunc {
+	return func(opts *PostOps) {
+		date, err := time.Parse(time.RFC3339, dateString)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		opts.CREATED_AT = date
 	}
 }
 

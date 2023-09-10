@@ -57,7 +57,7 @@ func (b Blog) GetPostByDate(date time.Time) ([]Post, error) {
 	}
 	_posts := make([]Post, 0)
 	for _, post := range posts {
-		if date.Equal(post.CREATED_AT) {
+		if date.Equal(post.CREATED_AT) || date.Before(post.CREATED_AT) {
 			_posts = append(_posts, post)
 		}
 	}
