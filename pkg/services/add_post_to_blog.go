@@ -43,6 +43,6 @@ func (s *AddPostToBlog) Execute(opts ...any) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	blog.AddPost(post)
+	blog.AddPost(*post)
 	return nil, nil
 }

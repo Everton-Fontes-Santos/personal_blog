@@ -9,27 +9,25 @@ import (
 
 // This Service execute the add of post in the blog
 // in that case he will add in repo
-type GetPostByIDService struct {
+type GetAllPostsService struct {
 	PostRepository domain.PostRepository
 }
 
-func NewGetByIDService(repo domain.PostRepository) ServiceInterface[entitys.Post] {
-	return &GetPostByIDService{
+func NewGetAllPostService(repo domain.PostRepository) ServiceInterface[[]entitys.Post] {
+	return &GetAllPostsService{
 		PostRepository: repo,
 	}
 }
 
-func (s *GetPostByIDService) Execute(opts ...any) (entitys.Post, error) {
+func (s *GetAllPostsService) Execute(opts ...any) ([]entitys.Post, error) {
 
 	var blog entitys.Blog
-	var id string
+	var posts []entitys.Post
 
 	for _, opt := range opts {
 		switch v := opt.(type) {
 		default:
-			return entitys.Post{}, errors.New("types must be Blog or Post")
-		case string:
-			id = v
+			return []entitys.Post{}, errors.New("types must be Blog")
 		case entitys.Blog:
 			blog = v
 		case *entitys.Blog:
@@ -39,16 +37,10 @@ func (s *GetPostByIDService) Execute(opts ...any) (entitys.Post, error) {
 
 	posts, err := blog.GetAllPosts()
 	if err != nil {
-		return entitys.Post{}, err
-	}
-	for _, post := range posts {
-		if post.ID == id {
-			return post, nil
+		posts, err = s.PostRepository.List()
+		if err != nil {
+			return []entitys.Post{}, err
 		}
 	}
-	post, err := s.PostRepository.Get(id)
-	if err != nil {
-		return entitys.Post{}, err
-	}
-	return post, nil
+	return posts, nil
 }

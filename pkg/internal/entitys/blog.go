@@ -10,14 +10,14 @@ import (
 // and thats a Post
 type Blog struct {
 	NAME   string
-	posts  []*Post
+	posts  []Post
 	admins []*User
 }
 
 func NewBlog(name string) *Blog {
 	return &Blog{
 		NAME:   name,
-		posts:  make([]*Post, 0),
+		posts:  make([]Post, 0),
 		admins: make([]*User, 0),
 	}
 }
@@ -39,30 +39,34 @@ func (b *Blog) GetAdmins() ([]*User, error) {
 	return b.admins, nil
 }
 
-func (b Blog) GetAllPosts() ([]*Post, error) {
+func (b Blog) GetAllPosts() ([]Post, error) {
 	if len(b.posts) <= 0 {
-		return []*Post{}, errors.New("don't have any post to get")
+		return []Post{}, errors.New("don't have any post to get")
 	}
 	return b.posts, nil
 }
 
-func (b Blog) GetPostByDate(date time.Time) ([]*Post, error) {
+func (b *Blog) UpdatePosts(posts []Post) {
+	b.posts = posts
+}
+
+func (b Blog) GetPostByDate(date time.Time) ([]Post, error) {
 	posts, err := b.GetAllPosts()
 	if err != nil {
 		return posts, err
 	}
-	_posts := make([]*Post, 0)
+	_posts := make([]Post, 0)
 	for _, post := range posts {
 		if date.Equal(post.CREATED_AT) {
 			_posts = append(_posts, post)
 		}
 	}
 	if len(_posts) == 0 {
-		return []*Post{}, errors.New("don't have any post to get")
+		return []Post{}, errors.New("don't have any post to get")
 	}
 	return _posts, nil
 }
 
-func (b *Blog) AddPost(post *Post) {
+func (b *Blog) AddPost(post Post) {
 	b.posts = append(b.posts, post)
 }
